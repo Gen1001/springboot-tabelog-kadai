@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+    <div th:replace="~{fragment :: meta}"></div>   
+             
+    <div th:replace="~{fragment :: styles}"></div>
+		
+    <title>売上管理</title>       
+	<!-- 必要なスクリプトを読み込む -->
+	<script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/protonet-jquery.inview/1.1.2/jquery.inview.min.js"></script>
+</head>
+<body>
+	<div class="nagoyameshi-wrapper">
+		<div th:replace="~{fragment :: header}"></div>
+	    <main>
+	        <div class="container pt-4 pb-5 nagoyameshi-container">
+	            <div class="row justify-content-center text-center">
+	                <div class="col-xxl-9 col-xl-10 col-lg-11">
+	                    <h1 class="total top">売上管理</h1>
+	                        
+	                    <!-- ログインメッセージの表示 -->
+						<div th:if="${successMessage}">
+	                    	<div class="alert alert-info">ログインしました。</div>    
+						</div>
+	
+	                    <!-- 成功メッセージの表示 -->
+						<div th:if="${successMessage}">
+	                    	<div class="alert alert-info"><span>成功しました</span></div>
+						</div>
+	                        
+	                    <div class="chart-area">
+	                        <canvas id="jobCategory"></canvas>
+	                    </div>
+						
+						<div class="chart-area">
+							<canvas id="ageCategory"></canvas>
+						</div>
+						
+						<div class="chart-area">
+							<canvas id="roleCategory"></canvas>
+						</div>
+						
+						<div class="chart-area">
+							<canvas id="seasonCategory"></canvas>
+						</div>
+	                </div>
+	            </div>
+	        </div>
+	    </main>
+		<div th:replace="~{fragment :: footer}"></div>
+	</div>
+	    
+	<script th:inline="javascript">
+		
+	    $(document).ready(function() {
+	        // Chart.js を使って円グラフを描画
+	        $('#jobCategory').on('inview', function(event, isInView) {
+	            if (isInView) {
+	                var ctx = document.getElementById("jobCategory").getContext('2d');
+					
+					var userPremium = /*[[${jobGraph}]]*/ [];
+					var jobNames = /*[[${job.![name]}]]*/ [];
+		            
+					
+	                var chart = new Chart(ctx, {
+	                    type: 'pie', // グラフのタイプ
+	                    data: { // グラフのデータ
+	                        labels: jobNames, // データの名前
+	                        datasets: [{
+	                            label: "職種別比率", // グラフのタイトル
+	                            backgroundColor: ["#D1935E", "#D1B35E", "#D1A55E", "#D17E5E", "#D1C0A4", "#A78E67", "#7C7261", "#524D45", "#85693C", "#454852"], // グラフの背景色
+	                            data: userPremium // データ
+                            }]
+                        },
+                        options: { // グラフのオプション
+                            maintainAspectRatio: false, // CSSで大きさを調整するため、自動縮小をさせない
+                            legend: {
+                                display: true, // グラフの説明を表示
+								labels:{
+									fontColor:'#fff'
+								}
+                            },
+                            tooltips: { // グラフへカーソルを合わせた際の詳細表示の設定
+                                callbacks: {
+                                    label: function(tooltipItem, data) {
+                                        return data.labels[tooltipItem.index] + ": " + data.datasets[0].data[tooltipItem.index] + "%"; // %を最後につける
+                                    }
+                                }
+                            },
+                            title: { // 上部タイトル表示の設定
+                                display: true,
+                                fontSize: 10,
+								fontColor: '#fff',
+                                text: '職種別集計 (単位：%)'
+                            },
+                        }
+                    });
+                }
+            });
+			
+	        $('#ageCategory').on('inview', function(event, isInView) {
+	            if (isInView) {
+	                var ctx = document.getElementById("ageCategory").getContext('2d');
+					
+					var userPremium = /*[[${ageGraph}]]*/ [];
+					
+	                var chart = new Chart(ctx, {
+	                    type: 'pie', // グラフのタイプ
+	                    data: { // グラフのデータ
+	                        labels: ["10代", "20代", "30代", "40代", "50代", "60代", "70代以上"], // データの名前
+	                        datasets: [{
+	                            label: "年齢別比率", // グラフのタイトル
+	                            backgroundColor: ["#D1935E", "#D1B35E", "#D1A55E", "#D17E5E", "#D1C0A4", "#A78E67", "#7C7261"], // グラフの背景色
+	                            data: userPremium // データ
+                            }]
+                        },
+                        options: { // グラフのオプション
+                            maintainAspectRatio: false, // CSSで大きさを調整するため、自動縮小をさせない
+                            legend: {
+                                display: true, // グラフの説明を表示
+								labels:{
+									fontColor:'#fff'
+								}
+                            },
+                            tooltips: { // グラフへカーソルを合わせた際の詳細表示の設定
+                                callbacks: {
+                                    label: function(tooltipItem, data) {
+                                        return data.labels[tooltipItem.index] + ": " + data.datasets[0].data[tooltipItem.index] + "%"; // %を最後につける
+                                    }
+                                }
+                            },
+                            title: { // 上部タイトル表示の設定
+                                display: true,
+                                fontSize: 10,
+								fontColor: '#fff',
+                                text: '年齢別集計 (単位：%)'
+                            },
+                        }
+                    });
+                }
+            });
+			
+	        $('#roleCategory').on('inview', function(event, isInView) {
+	            if (isInView) {
+	                var ctx = document.getElementById("roleCategory").getContext('2d');
+					
+					var userPremium = /*[[${roleGraph}]]*/ [];
+					
+	                var chart = new Chart(ctx, {
+	                    type: 'pie', // グラフのタイプ
+	                    data: { // グラフのデータ
+	                        labels: ["無料会員", "有料会員"], // データの名前
+	                        datasets: [{
+	                            label: "会員別比率", // グラフのタイトル
+	                            backgroundColor: ["#D1935E", "#D1B35E"], // グラフの背景色
+	                            data: userPremium, // データ
+                            }]
+                        },
+                        options: { // グラフのオプション
+                            maintainAspectRatio: false, // CSSで大きさを調整するため、自動縮小をさせない
+                            legend: {
+                                display: true, // グラフの説明を表示
+								labels:{
+									fontColor:'#fff'
+								}
+                            },
+                            tooltips: { // グラフへカーソルを合わせた際の詳細表示の設定
+                                callbacks: {
+                                    label: function(tooltipItem, data) {
+                                        return data.labels[tooltipItem.index] + ": " + data.datasets[0].data[tooltipItem.index] + "%"; // %を最後につける
+                                    }
+                                }
+                            },
+                            title: { // 上部タイトル表示の設定
+                                display: true,
+                                fontSize: 10,
+								fontColor: '#fff',
+                                text: '会員別集計 (単位：%)'
+                            },
+                        }
+                    });
+                }
+            });
+			
+			$('#seasonCategory').on('inview', function(event, isInView) {//画面上に入ったらグラフを描画
+			if (isInView) {
+			var ctx=document.getElementById("seasonCategory");//グラフを描画したい場所のid
+			
+			var seasonGraph = /*[[${seasonGraph}]]*/ [];
+			var currentYear = /*[[${currentYear}]]*/ [];
+			
+			var chart=new Chart(ctx,{
+			type:'line',//グラフのタイプ
+			data:{//グラフのデータ
+				labels:["1月","2月","3月","4月","5月","6月","7月","8月","9月","10月","11月","12月"],//データの名前
+				datasets:[{
+						label:"有料会員登録者数の変化",//グラフのタイトル
+						borderColor: "rgba(255,0,0,1)",//グラフの線の色
+						backgroundColor:"rgba(255,0,0,0.1)",//グラフの背景色
+						data: seasonGraph,//横列に並ぶデータ
+						fontColor: '#fff'
+					}]
+			},
+			options:{//グラフのオプション
+				legend:{
+					display: false//グラフの説明を非表示
+				},
+				tooltips:{//グラフへカーソルを合わせた際の詳細表示の設定
+					callbacks:{
+			        label: function(tooltipItems, data) {
+			            if(tooltipItems.yLabel == "0"){
+			                return "";
+			            }
+			            return data.datasets[tooltipItems.datasetIndex].label + "：" + tooltipItems.yLabel + "人";//Kgを最後につける
+			        }
+			    }
+				},
+			title:{//上部タイトル表示の設定
+					display: true,
+					fontSize:10,
+					fontColor: '#fff',
+					text: '新規会員登録者数の変化 (' + currentYear + '年)'
+				},
+			scales:{
+					yAxes:[//グラフ縦軸（Y軸）設定
+						{
+							
+							gridLines:{
+								color: 'rgba(248,248,255,0.1)'
+							},
+							
+							ticks:{
+								beginAtZero:true,//0からスタート
+								suggestedMax: 100,//最大が1000
+								suggestedMin: 0,//最小が0
+								stepSize: 10,//10づつ数値が刻まれる
+								fontColor: '#fff',
+								callback: function(value){
+									return  value +  '人'					
+							}
+						}
+					}
+				],
+					xAxes:[//棒グラフ縦軸（X軸）設定
+						{
+							gridLines:{
+								color: 'rgba(248,248,255,0.1)'
+							},
+														
+							barPercentage:0.5,//バーの太さ
+							ticks:{
+								fontColor: '#fff',
+
+							}
+							
+						}
+					]
+				}
+			}
+			});
+			
+			}
+			});
+        });
+    </script>
+	<div th:replace="~{fragment :: scripts}"></div>
+</body>
+</html>

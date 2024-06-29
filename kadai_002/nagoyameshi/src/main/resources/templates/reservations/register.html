@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns:th="https:www.thymeleaf.org">
+	<head>
+		<div th:replace="~{fragment :: meta}"></div>
+		
+		<div th:replace="~{fragment :: styles}"></div>
+		
+		<!-- Flatpickr -->
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+		         
+		<title>店舗予約</title>
+	</head>
+	<body>
+		<div class="nagoyameshi-wrapper">
+			<!-- ヘッダー -->
+			<div th:replace="~{fragment :: header}"></div>
+			
+			<main>
+				<div class="container pt-4 pb-5 nagoyameshi-container top">
+					<div class="row justify-content-center">
+						<div class="col-xl-5 col-lg-6 col-md-8">
+							<nav class="mb-4" style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+								<ol class="breadcrumb mb-0">
+									<li class="breadcrumb-item"><a th:href="@{/restaurants}">ホーム</a></li>
+									<li class="breadcrumb-item"><a th:href="@{/restaurants/detail/__${restaurant.getId()}__}">店舗詳細</a></li>
+									<li class="breadcrumb-item active" aria-current="page">店舗予約</li>
+								</ol>
+							</nav>
+							
+							<h1 class="mb-4 text-center" th:text="${restaurant.getName()} + 'の予約'"></h1>
+							
+							<div class="container">
+								<div class="row">
+									<div class="col-lg-4 px-0 ps-lg-4 mb-4">
+										<div class="card">
+											<div class="card-body">
+												<form method="post" th:action="@{/reservations/__${restaurant.getId()}__/create}" th:object="${reservationRegisterForm}">
+													<div class="form-group mb-2">
+														<label for="reservationDate" class="col-form-label text-md-left fw-bold">予約日</label>
+														<div th:if="${#fields.hasErrors('reservationDate')}" class="text-danger small mb-2" th:errors="*{reservationDate}"></div>
+														<input type="text" class="form-control" th:field="*{reservationDate}">
+													</div>
+													
+													<div class="form-group mb-2">
+														<label for="reservationTime" class="col-form-label text-md-left fw-bold">予約時間</label>
+														<div th:if="${#fields.hasErrors('reservationTime')}" class="text-danger small mb-2" th:errors="*{reservationTime}"></div>
+														<input type="text" class="form-control" th:field="*{reservationTime}">
+													</div>
+													
+													<div class="form-group mb-4">
+														<label for="reservationNumber" class="col-form-label text-md-left fw-bold">予約人数</label>
+														<div th:if="${#fields.hasErrors('reservationNumber')}" class="text-danger small mb-2" th:errors="*{reservationNumber}"></div>
+														<input type="number" class="form-control" th:field="*{reservationNumber}" min="1">
+													</div>
+													
+													<div class="form-group">
+														<button type="submit" class="btn text-white shadow-sm w-100 nagoyameshi-btn">予約確定</button>
+													</div>
+												</form>
+												
+												<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+											    <script th:inline="javascript">
+											        const holiday = /*[[${holiday}]]*/ [];
+											
+											        let maxDate = new Date();
+											        maxDate = new Date(maxDate.setMonth(maxDate.getMonth() + 3));
+											
+											        flatpickr('#reservationDate', {
+											            mode: "single",
+											            locale: 'ja',
+											            disable: holiday,
+											            dateFormat: "Y-m-d",
+											            minDate: "today",
+											            maxDate: maxDate
+											        });
+											        
+											        flatpickr('#reservationTime', {
+											            enableTime: true,
+											            noCalendar: true,
+											            dateFormat: "H:i",
+											            time_24hr: true
+											        });
+											    </script>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+					</div>
+				</div>
+            </main>
+            
+            <!-- フッター -->
+            <div th:replace="~{fragment :: footer}"></div>
+        </div>    
+        
+        <div th:replace="~{fragment :: scripts}"></div>  
+        
+  </body>
+</html>

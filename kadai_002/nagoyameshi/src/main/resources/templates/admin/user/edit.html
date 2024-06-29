@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org">
+    <head>
+        <div th:replace="~{fragment :: meta}"></div>   
+             
+        <div th:replace="~{fragment :: styles}"></div>
+		
+        <title>会員編集</title>       
+    </head>
+    <body>
+        <div class="nagoyameshi-wrapper">
+            <!-- ヘッダー -->
+            <div th:replace="~{fragment :: header}"></div>
+            
+            <main>
+                <div class="container pt-4 pb-5 nagoyameshi-container top">
+                    <div class="row justify-content-center">
+                        <div class="col-xl-5 col-lg-6 col-md-8">
+                            <nav class="mb-4" style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+                                <ol class="breadcrumb mb-0"> 
+									<li class="breadcrumb-item"><a th:href="@{/admin}">管理者用ホーム</a></li>
+                                    <li class="breadcrumb-item"><a th:href="@{/admin/usre}">会員一覧</a></li>                                                           
+                                    <li class="breadcrumb-item active" aria-current="page">会員編集</li>
+                                </ol>
+                            </nav> 
+                            
+                            <h1 class="mb-4 text-center">会員編集</h1>         
+                            
+                            <form method="post" th:action="@{/admin/user/__${userEditForm.getId()}__/update}" th:object="${userEditForm}" enctype="multipart/form-data">                                                            
+								<input type="hidden" th:field="*{id}">
+								
+                                <div class="form-group row mb-3">
+                                    <div class="col-md-4">
+                                        <label for="name" class="col-form-label text-md-left fw-bold">氏名</label>
+                                    </div>
+                                    <div class="col-md-8">                                    
+                                        <div th:if="${#fields.hasErrors('name')}" class="text-danger small mb-2" th:errors="*{name}"></div>                                    
+                                        <input type="text" class="form-control" th:field="*{name}">
+                                    </div>
+                                </div>
+								
+                                <div class="form-group row mb-3">
+                                    <div class="col-md-4">
+                                        <label for="ruby" class="col-form-label text-md-left fw-bold">フリガナ</label>
+                                    </div>
+                                    <div class="col-md-8">                                    
+                                        <div th:if="${#fields.hasErrors('ruby')}" class="text-danger small mb-2" th:errors="*{ruby}"></div>                                    
+                                        <input type="text" class="form-control" th:field="*{ruby}">
+                                    </div>
+                                </div>
+                                                                                                                        
+                                <div class="form-group row mb-3">
+                                    <div class="col-md-4">
+                                        <label for="postalCode" class="col-form-label text-md-left fw-bold">郵便番号</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <div th:if="${#fields.hasErrors('postNumber')}" class="text-danger small mb-2" th:errors="*{postNumber}"></div>
+                                        <input type="text" class="form-control" th:field="*{postNumber}">
+                                    </div>
+                                </div>
+                                                                                                              
+                                <div class="form-group row mb-3">
+                                    <div class="col-md-4">
+                                        <label for="address" class="col-form-label text-md-left fw-bold">住所</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <div th:if="${#fields.hasErrors('address')}" class="text-danger small mb-2" th:errors="*{address}"></div>
+                                        <input type="text" class="form-control" th:field="*{address}">  
+                                    </div>
+                                </div>                                                                                
+                                
+                                <div class="form-group row mb-3">
+                                    <div class="col-md-4">
+                                        <label for="phoneNumber" class="col-form-label text-md-left fw-bold">電話番号</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <div th:if="${#fields.hasErrors('phoneNumber')}" class="text-danger small mb-2" th:errors="*{phoneNumber}"></div>
+                                        <input type="text" class="form-control" th:field="*{phoneNumber}">                                
+                                    </div>
+                                </div>
+                                                                                                                        
+                                <div class="form-group row mb-3">
+                                    <div class="col-md-4">
+                                        <label for="birthday" class="col-form-label text-md-left fw-bold">生年月日</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <div th:if="${#fields.hasErrors('birthday')}" class="text-danger small mb-2" th:errors="*{birthday}"></div>
+                                        <input type="text" id="birthday" class="form-control" th:field="*{birthday}">                                
+                                    </div>
+                                </div>
+                                                                                                                        
+                                <div class="form-group row mb-3">
+                                    <div class="col-md-4">
+                                        <label for="job" class="col-form-label text-md-left fw-bold">職種</label>
+                                    </div>
+                                    <div class="col-md-8">
+										<div th:if="${#fields.hasErrors('jobId')}" class="text-danger small mb-2" th:errors="*{jobId}"></div>                                    
+										<select class="form-control" th:field="*{jobId}" name="jobId">
+											<option th:each="job : ${job}" th:value="${job.getId()}" th:text="${job.getName()}"></option>
+										</select>
+                                    </div>
+                                </div>
+                                                                                                                        
+                                <div class="form-group row mb-3">
+                                    <div class="col-md-4">
+                                        <label for="email" class="col-form-label text-md-left fw-bold">メールアドレス</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <div th:if="${#fields.hasErrors('email')}" class="text-danger small mb-2" th:errors="*{email}"></div>
+                                        <input type="text" class="form-control" th:field="*{email}">                                
+                                    </div>
+                                </div>
+								
+                                <div class="form-group d-flex justify-content-center my-4">
+                                    <button type="submit" class="btn text-white shadow-sm w-50 nagoyameshi-btn">登録</button>
+                                </div>
+                            </form>                                                                         
+                        </div>
+                    </div>
+                </div>                
+            </main>
+            
+            <!-- フッター -->
+            <div th:replace="~{fragment :: footer}"></div>
+        </div>    
+        
+        <div th:replace="~{fragment :: scripts}"></div>  
+		
+	</body>
+</html>
