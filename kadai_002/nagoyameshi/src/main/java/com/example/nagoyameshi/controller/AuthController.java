@@ -78,7 +78,7 @@ public class AuthController {
         signupEventPublisher.publishSignupEvent(createdUser, requestUrl);
         redirectAttributes.addFlashAttribute("successMessage", "仮会員登録が完了しました。ご入力いただいたメールアドレスに送信した認証メールに記載されているリンクをクリックし、本会員登録を完了してください。");
         
-        return "redirect:/";
+        return "redirect:/restaurants";
     }   
     
     @GetMapping("/signup/verify")

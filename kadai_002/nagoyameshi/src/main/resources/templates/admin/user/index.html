@@ -27,7 +27,7 @@
 							<div class="d-flex justify-content-between align-items-end flex-wrap">
 							    <form method="get" th:action="@{/admin/user}" class="mb-3">
 							        <div class="input-group">
-							            <input type="text" class="form-control" name="keyword" th:value="${keyword}" placeholder="氏名">
+							            <input type="text" class="form-control" name="keyword" th:value="${keyword}" placeholder="メールアドレス">
 							            <button type="submit" class="btn text-white shadow-sm nagoyameshi-btn">検索</button> 
 							        </div>               
 							    </form>    
@@ -63,24 +63,6 @@
 										<td th:text="${user.getJob().getName()}"></td>
 										<td th:text="${user.getEmail()}"></td>
 										<td><a th:href="@{/admin/user/__${user.getId()}__/edit}">編集</a></td>      
-										<td><a href="#" class="nagoyameshi-link-danger" data-bs-toggle="modal" th:data-bs-target="${'#deleteUserModal' + user.getId()}">削除</a></td>
-										
-										<!--　削除用モーダル -->
-										<div class="modal fade" th:id="${'deleteUserModal' + user.getId()}" tabindex="-1" th:aria-labelledby="${'deleteUserModalLabel' + user.getId()}">
-											<div class="modal-dialog">
-												<div class="modal-content">
-													<div class="modal-header">
-														<h5 class="modal-title" th:id="${'deleteUserModalLabel' + user.getId()}" th:text="${user.getName() + 'を削除してもよろしいですか？'}"></h5>
-														<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="閉じる"></button>
-													</div>
-													<div class="modal-footer">
-														<form method="post"th:action="@{/admin/user/__${user.getId()}__/delete}">
-															<button type="submit" class="btn nagoyameshi-btn-danger text-white shadow-sm">削除</button>
-														</form>
-													</div>
-												</div>
-											</div>
-										</div>
 										
 									</tr>
 								</tbody>

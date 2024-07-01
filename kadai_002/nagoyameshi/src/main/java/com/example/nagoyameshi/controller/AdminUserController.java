@@ -23,19 +23,25 @@ import com.example.nagoyameshi.entity.User;
 import com.example.nagoyameshi.form.UserEditForm;
 import com.example.nagoyameshi.repository.JobRepository;
 import com.example.nagoyameshi.repository.UserRepository;
+import com.example.nagoyameshi.repository.VerificationTokenRepository;
 import com.example.nagoyameshi.service.UserService;
 
+import jakarta.transaction.Transactional;
+
+@Transactional
 @Controller
 @RequestMapping("/admin/user")
 public class AdminUserController {
 	private final UserRepository userRepository;
 	private final UserService userService;
 	private final JobRepository jobRepository;
+	private final VerificationTokenRepository verificationTokenRepository;
 	
-	public AdminUserController(UserRepository userRepository, UserService userService, JobRepository jobRepository) {
+	public AdminUserController(UserRepository userRepository, UserService userService, JobRepository jobRepository, VerificationTokenRepository verificationTokenRepository) {
 		this.userRepository = userRepository;
 		this.userService = userService;
 		this.jobRepository = jobRepository;
+		this.verificationTokenRepository = verificationTokenRepository;
 	}
 	
 	@GetMapping("")
@@ -43,7 +49,7 @@ public class AdminUserController {
 		Page<User> userPage;
 		
 		if (keyword != null && !keyword.isEmpty()) {
-			userPage = userRepository.findByNameLike("%" + keyword + "%", pageable);
+			userPage = userRepository.findByEmailLike("%" + keyword + "%", pageable);
 		} else {
 			userPage = userRepository.findAll(pageable);
 		}
@@ -73,17 +79,9 @@ public class AdminUserController {
 		}
 		
 		userService.update(userEditForm);
-		redirectAttributes.addFlashAttribute("successMessage", "店舗を編集しました。");
+		redirectAttributes.addFlashAttribute("successMessage", "ユーザーを編集しました。");
 		
 		return "redirect:/admin/user";
 	}
-	
-	@PostMapping("/{id}/delete")
-	public String delete(@PathVariable(name = "id") Integer id, RedirectAttributes redirectAttributes) {
-		userRepository.deleteById(id);
-		
-		redirectAttributes.addFlashAttribute("successMessage", "店舗を削除しました。");
-		
-		return "redirect:/admin/user";
-	}
+
 }

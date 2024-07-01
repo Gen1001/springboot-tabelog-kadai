@@ -16,6 +16,9 @@
 				<div class="container nagoyameshi-container">
 					<div class="row justify-content-center">
 						<div class="col">
+							<div th:if="${successMessage}" class="alert alert-info">
+								<span th:text="${successMessage}"></span>
+							</div>
 								<form method="get" th:action="@{/restaurants}" class="mb-3 ">
 									<div class="input-group top">
 										<input type="text" class="form-controle" name="keyword" th:value="${keyword}" placeholder="店舗名、キーワード">
@@ -37,7 +40,7 @@
 								
 								<div class="category">
 									<div th:each="category : ${category}" class="category-middle">
-										<a href="@{/restaurants/__${category.getId()}__}" th:text="${category.getName()}" class="category-text"></a>
+										<a th:href="@{/restaurants/__${category.getId()}__}" th:text="${category.getName()}" class="category-text"></a>
 									</div>
 								</div>
 								

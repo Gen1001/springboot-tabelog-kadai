@@ -56,7 +56,6 @@ public class HomeController {
  	public String index(Model model) {
  		List<Restaurant> restaurant = restaurantRepository.findAll();
  		List<User> userAll = userRepository.findAll();
- 		List<User> userGeneral = userRepository.findByRoleId(1);
  		List<User> userPremium = userRepository.findByRoleId(2);
  		List<Job> job = jobRepository.findAll();
  		List<Integer> jobGraph = new ArrayList<Integer>();
